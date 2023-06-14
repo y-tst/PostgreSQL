@@ -1,17 +1,18 @@
-create or replace function update_updated_datetime()
-RETURNS trigger AS $$
-begin
-    if OLD.* is DISTINCT FROM NEW.* then
+CREATE OR REPLACE FUNCTION update_updated_datetime()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF OLD.* IS DISTINCT FROM NEW.* THEN
         NEW.updated_datetime := current_timestamp;
-    end if;
-    return new;
-end;
+    END IF;
+    RETURN NEW;
+END;
 $$ LANGUAGE plpgsql;
 
-create trigger update_student_updated_datetime
-before update on students
-for each row
-EXECUTE function update_updated_datetime();
+CREATE TRIGGER update_student_updated_datetime
+BEFORE UPDATE ON students
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_datetime();
+
 
 -- In this trigger function, the IF statement compares the entire old and new rows
 -- using the IS DISTINCT FROM operator.
